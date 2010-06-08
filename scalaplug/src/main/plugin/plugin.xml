@@ -1,0 +1,40 @@
+<plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://www.jivesoftware.com/schemas/clearspace/1_1/plugin.xsd">
+    <name>scalaplug</name>
+    <description>scalaplug</description>
+    <author></author>
+    <version>1.0.0</version>
+    <minServerVersion>1.10</minServerVersion>
+    <!-- you will want to change your class name here! -->
+
+    <!-- The <components> element contains additions or customizations to
+	components in the user interface. Each <component> child element
+	represents a different UI piece, with its id attribute value
+	specifying which piece is being customized.
+
+	Here, you're customizing the user bar (the menu bar at the top of
+	each Clearspace page) so that its Browse menu gets a new entry
+	item, "Say Hello". The <url> element here specifies the URL that
+	Clearspace will load when the user clicks the item. In this
+	case, Clearspace will execute the sayhello action (which is defined
+	in the xwork-plugin.xml file).
+    -->
+
+    <components>
+        <!--
+            <component> elements define user interface elements
+            to be integrated. For a description of these, see
+            Integrating Plugin UI. This one adds
+            an Action box link to a user profile; this will be
+            seen by visiting users, rather than the profile's owner.
+        -->
+        <!--<component id="community-tabs">-->
+            <!--<tab id="iframe-tab" cssClass="jive-icon-sml jive-icon-blog">-->
+                <!--<name><![CDATA[TIMS]]></name>-->
+                <!--<description><![CDATA[TIMS]]></description>-->
+                <!--<when><![CDATA[community.getProperties().containsKey('thinkfinity.tims.community')]]></when>-->
+                <!--<url><![CDATA[<@s.url value='${JiveResourceResolver.getJiveObjectURL(community)}'/>?view=iframe]]></url>-->
+            <!--</tab>-->
+        <!--</component>-->
+    </components>
+</plugin>

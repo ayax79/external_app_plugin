@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This is the root pom file for a Jive SBS customization project. 
+
+  Each plugin in your project will be represented here as a module.  By default you get
+  a "web" module.  Although you can build all modules from the root of your customization project
+  most of the activity will take place in the sub-modules.  For example, you currently run 
+  your web app via Cargo from within your web/ module.
+
+  To change the Jive SBS version this customization project is attached to modify the clearspace.version 
+  property at the bottom of the file.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.syncapse</groupId>
+    <artifactId>externalapp</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <description>Jive SBS implementation project. This is the parent pom</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>web</module>
+        <module>externalapp</module>
+    </modules>
+
+    <build>
+        <sourceDirectory>src/main/scala</sourceDirectory>
+        <testSourceDirectory>src/test/scala</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.scala-tools</groupId>
+                    <artifactId>maven-scala-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>compile</goal>
+                                <goal>testCompile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <scalaVersion>${scala.version}</scalaVersion>
+                        <args>
+                            <arg>-target:jvm-1.5</arg>
+                        </args>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                    <buildcommands>
+                        <buildcommand>ch.epfl.lamp.sdt.core.scalabuilder</buildcommand>
+                    </buildcommands>
+                    <additionalProjectnatures>
+                        <projectnature>ch.epfl.lamp.sdt.core.scalanature</projectnature>
+                    </additionalProjectnatures>
+                    <classpathContainers>
+                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+                        <classpathContainer>ch.epfl.lamp.sdt.launching.SCALA_CONTAINER</classpathContainer>
+                    </classpathContainers>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <!--
+                  We're currently using Ant to build a jiveHome suitable for testing in the root project target directory: ./target/jiveHome
+                  You can rely on this to run your unit tests, or to test via Cargo.  When your webapp starts, point to this
+                  in the Admin Console.
+
+                  The jive.setup property (settable at the bottom of this pom.xml) gets filtered into the jive_startup.xml.  Use that
+                  to toggle whether you go into the startup configuration screens or not.  You can override this by setting it to false here
+                  or via the commandline, e.g. if you  want to change any system configurations, databses, jiveHome, etc.
+                  -->
+                    <execution>
+                        <id>package-clearspace-plugin</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <echo message="building jive home"/>
+                                <mkdir dir="${project.build.directory}"/>
+                                <mkdir dir="${project.build.directory}/jiveHome"/>
+                                <mkdir dir="${project.build.directory}/jiveHome/plugins"/>
+                                <mkdir dir="${project.build.directory}/jiveHome/themes"/>
+                                <filter token="jive.setup" value="${jive.setup}"/>
+                                <copy todir="./target/jiveHome" overwrite="true" filtering="true">
+                                    <filterset>
+                                        <filter token="jive.setup" value="${jive.setup}"/>
+                                    </filterset>
+                                    <fileset dir="src/test/resources/jiveHome">
+                                        <include name="**/*.*"/>
+                                    </fileset>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--
+            The upgrade plugin generates diffs between custom overlayed files and the newest version, to ease upgrades.
+
+            We are hard at work upgrading this plugin to work for the general public.  Please be patient until it's done.
+            -->
+            <plugin>
+                <groupId>com.jivesoftware.maven</groupId>
+                <artifactId>maven-upgrade-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <inherited>false</inherited>
+                <configuration>
+                    <currentVersion>${sbs.version}</currentVersion>
+                    <upgradeVersion>${upgrade.version}</upgradeVersion>
+                    <svnUser>${svn.username}</svnUser>
+                    <svnPassword>${svn.password}</svnPassword>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.jivesoftware</groupId>
+            <artifactId>jive-sbs-employee-all</artifactId>
+            <!-- was clearspacex-all -->
+            <version>${sbs.version}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Unit testing dependencies.  You unit test all your code, right? -->
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.5</version>
+            <!--<scope>test</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.scala-tools.testing</groupId>
+            <artifactId>specs</artifactId>
+            <version>1.6.2.1</version>
+            <!--<scope>test</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.8.2</version>
+            <!--<scope>test</scope>-->
+        </dependency>
+    </dependencies>
+
+
+    <!--
+	Modify these properties to conform to your own environment
+	-->
+    <properties>
+        <scala.version>2.7.7</scala.version>
+        <customer.name>externalapp</customer.name>
+        <customer.version>1.0-SNAPSHOT</customer.version>
+        <sbs.shortversion>4.0.5</sbs.shortversion>
+        <sbs.version>4.0.5</sbs.version>
+        <!-- This gets filtered into the setup param in your jive_init.xml Set to false if you want to enter setup screens-->
+        <jive.setup>true</jive.setup>
+        <cargo.wait>false</cargo.wait>
+        <java.compiler>${java.home}/bin/javac</java.compiler>
+    </properties>
+
+    <organization>
+        <name>Jive Software</name>
+        <url>http://jivesoftware.com</url>
+    </organization>
+
+    <!-- 
+	 For some nice reports run mvn site:site
+	 -->
+
+
+    <repositories>
+        <repository>
+            <id>scala-tools.org</id>
+            <name>Scala-Tools Maven2 Repository</name>
+            <url>http://scala-tools.org/repo-releases</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>scala-tools.org</id>
+            <name>Scala-Tools Maven2 Repository</name>
+            <url>http://scala-tools.org/repo-releases</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>

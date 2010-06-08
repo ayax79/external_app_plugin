@@ -1,0 +1,20 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="iframeTab-actions" extends="community-custom">
+        <action name="community" class="com.jivesoftware.community.ExtendedCommunityTabsAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="communityViewCount"/>
+            <interceptor-ref name="communityUserHistory"/>
+            <result name="cancel" type="redirect">index.jspa</result>
+            <result name="success">/template/global/community.ftl</result>
+            <result name="success-all">/template/global/community-all.ftl</result>
+            <result name="success-discussions">/template/global/community-discussions.ftl</result>
+            <result name="success-documents">/template/global/community-documents.ftl</result>
+            <result name="success-blogposts">/template/global/community-blogposts.ftl</result>
+            <result name="success-tags">/template/global/community-tags.ftl</result>
+            <result name="success-content">/template/global/community-content.ftl</result>
+            <result name="success-videos">/template/global/community-videos.ftl</result>
+            <result name="success-iframe">/plugins/timTab/resources/templates/community-iframe.ftl</result>
+        </action>
+    </package>
+</struts>
