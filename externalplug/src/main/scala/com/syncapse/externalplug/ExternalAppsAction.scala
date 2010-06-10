@@ -5,29 +5,34 @@ import java.util.{List => JList}
 import reflect.BeanProperty
 import collection.JavaConversions
 
+trait BaseAction {
+  protected val success = "success"
+}
 
-class ExternalAppsAction extends JiveActionSupport {
-
+class ExternalAppsAction extends JiveActionSupport with BaseAction {
   @BeanProperty
-  var apps : JList[ExternalApp] = null
+  var apps: JList[ExternalApp] = null
+
 
   override def execute = {
-    apps = JavaConversions.asList(ExternalAppManager.loadAll)
-    "success"
+    apps = JavaConversions.asList(ExternalApp.loadAll)
+    success
   }
 
   def delete = {
-    "success"
+    success
   }
 
 }
 
-class ExternalAppEditAction extends JiveActionSupport {
-
+class ExternalAppEditAction extends JiveActionSupport with BaseAction {
   @BeanProperty
-  var externalApp : ExternalApp = null
+  var externalApp: ExternalApp = null
+
+  var id: Int = -1
 
   override def execute = {
-    ""
+    externalApp = ExternalApp.loadById(id)
+    success
   }
 }

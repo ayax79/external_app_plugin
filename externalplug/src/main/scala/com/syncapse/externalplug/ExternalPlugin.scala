@@ -3,7 +3,6 @@ package com.syncapse.externalplug
 import com.jivesoftware.base.plugin.Plugin
 import reflect.BeanProperty
 import org.slf4j.LoggerFactory
-import com.jivesoftware.base.UserManager
 import org.springframework.beans.factory.annotation.Required
 import javax.sql.DataSource
 
@@ -19,7 +18,7 @@ class ExternalPlugin extends Object with Plugin[ExternalPlugin] {
   }
 
   def init = {
-    ExternalAppManager.dataSource = dataSource
+    ExternalApp.dataSource = dataSource
   }
 
 }
