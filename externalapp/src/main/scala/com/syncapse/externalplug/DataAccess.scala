@@ -3,22 +3,22 @@ package com.syncapse.externalplug
 import collection.mutable.HashSet
 import java.sql.{Connection, PreparedStatement, ResultSet}
 import javax.sql.DataSource
+import com.jivesoftware.base.database.dao.SequenceProvider
 
 
 trait DataAccess {
-
   var dataSource: DataSource = null
-  
+  var sequence: SequenceProvider = null
+
   protected def withConnection[T](f: Connection => T): T = {
     val conn = dataSource.getConnection
-    try {f(conn)} finally conn.close
+    try f(conn) finally conn.close
   }
-
   protected def withStatement[T](sql: String)(f: PreparedStatement => T): T = {
     withConnection {
       conn =>
         val ps = conn.prepareStatement(sql)
-        try {f(ps)} finally ps.close
+        try f(ps) finally ps.close
     }
   }
 
@@ -30,5 +30,7 @@ trait DataAccess {
     }
     results.toList
   }
+
+  protected def nextId = sequence.nextId  
 
 }

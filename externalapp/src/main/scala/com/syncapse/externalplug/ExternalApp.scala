@@ -2,8 +2,12 @@ package com.syncapse.externalplug
 
 import javax.sql.DataSource
 import java.sql.{ResultSet}
+import com.jivesoftware.community.JiveObject
+import util.Random
 
 object ExternalApp extends DataAccess {
+  val objectType: Int = Integer.MAX_VALUE - 251132
+  protected val random: Random = new Random
 
   def loadAll: List[ExternalApp] = {
     withStatement("SELECT * FROM synExternalApp") {
@@ -12,15 +16,21 @@ object ExternalApp extends DataAccess {
     }
   }
 
-  def insert(ea: ExternalApp) = {
-    withStatement("INSERT INTO synExternalApp (name, key, canvasUrl, profileUrl) VALUES (?, ?, ?, ?)") {
+  def insert(name: String, canvasUrl: String, profileUrl: String) = {
+    val key = random.nextInt
+    val id = ExternalApp.nextId
+
+    withStatement("INSERT INTO synExternalApp (id, name, key, canvasUrl, profileUrl) VALUES (?, ?, ?, ?, ?)") {
       ps =>
-        ps.setString(1, ea.name)
-        ps.setLong(2, ea.key)
-        ps.setString(3, ea.canvasUrl)
-        ps.setString(4, ea.profileUrl)
+        ps.setLong(1, id)
+        ps.setString(2, name)
+        ps.setLong(3, key)
+        ps.setString(4, canvasUrl)
+        ps.setString(5, profileUrl)
         ps.executeUpdate
     }
+
+    ExternalApp(id, name, key, canvasUrl, profileUrl)
   }
 
   def loadById(id: Long): ExternalApp = {
@@ -31,20 +41,33 @@ object ExternalApp extends DataAccess {
     }
   }
 
-  def update(ea: ExternalApp) = {
-    val ea2 = loadById(ea.id.asInstanceOf[Long])
-    val name = if (ea.name != ea2.name) ea.name else ea2.name
-    val canvasUrl = if (ea.canvasUrl != ea2.canvasUrl) ea.canvasUrl else ea2.canvasUrl
-    val profileUrl = if (ea.profileUrl != ea2.profileUrl) ea.profileUrl else ea2.profileUrl
-
-    ExternalApp.withStatement("UPDATE synExternalApp SET name = ?, canvasUrl = ?, profileUrl = ? WHERE id = ?") {
-      ps =>
-        ps.setString(1, name)
-        ps.setString(2, canvasUrl)
-        ps.setString(3, profileUrl)
-        ps.setInt(4, ea2.id.asInstanceOf[Int])
-        ps.executeUpdate
+  def update(id: Long, name: String, canvasUrl: String, profileUrl: String) = {
+    var dirty = false
+    val ea2 = loadById(id)
+    
+    if (name != ea2.name) {
+      dirty = true
     }
+
+    if (canvasUrl != ea2.canvasUrl) {
+      dirty = true
+    }
+
+    if (profileUrl != ea2.profileUrl) {
+      dirty = true
+    } 
+
+    if (dirty) {
+      ExternalApp.withStatement("UPDATE synExternalApp SET name = ?, canvasUrl = ?, profileUrl = ? WHERE id = ?") {
+        ps =>
+          ps.setString(1, name)
+          ps.setString(2, canvasUrl)
+          ps.setString(3, profileUrl)
+          ps.setLong(4, ea2.id)
+          ps.executeUpdate
+      }
+    }
+    ExternalApp(ea2.id, name, ea2.key, canvasUrl, profileUrl)
   }
 
   def delete(id: Long) = {
@@ -57,7 +80,7 @@ object ExternalApp extends DataAccess {
 
   protected def mapper(rs: ResultSet) {
     new ExternalApp(
-      rs.getObject("id").asInstanceOf[Option[Long]],
+      rs.getObject("id").asInstanceOf[Long],
       rs.getString("name"),
       rs.getInt("key").asInstanceOf[Int],
       rs.getString("canvasUrl"),
@@ -66,7 +89,7 @@ object ExternalApp extends DataAccess {
 
 }
 
-case class ExternalApp(id: Option[Long],
+case class ExternalApp(id: Long,
                        name: String,
                        key: Long,
                        canvasUrl: String,

@@ -8,7 +8,10 @@
        default-autowire="no" default-init-method="init" default-destroy-method="destroy">
               
     <bean class="com.syncapse.externalplug.ExternalPlugin">
-        <property name="userManager" ref="userManager" />
+        <property name="dataSource">
+            <util:property-path path="dataSourceFactory.dataSource"/>
+        </property>
+        <property name="sequenceDao" ref="sequenceDao" />
     </bean>
 
 </beans>

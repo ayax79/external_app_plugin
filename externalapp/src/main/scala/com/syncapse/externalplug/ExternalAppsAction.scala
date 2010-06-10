@@ -34,15 +34,30 @@ class ExternalAppEditAction extends JiveActionSupport with BaseAction {
   @BeanProperty
   var externalApp: ExternalApp = null
 
+  @BeanProperty
   var id: Int = -1
 
+  @BeanProperty
+  var name: String = null
+
+  @BeanProperty
+  var canvasUrl: String = null
+
+  @BeanProperty
+  var profileUrl: String = null
 
   override def input = {
     externalApp = ExternalApp.loadById(id)
     INPUT    
   }
 
-  override def execute = {
+  def update = {
+    ExternalApp.update(id, name, canvasUrl, profileUrl)
+    SUCCESS
+  }
+
+  def create = {
+    ExternalApp.insert(name, canvasUrl, profileUrl)
     SUCCESS
   }
 }
