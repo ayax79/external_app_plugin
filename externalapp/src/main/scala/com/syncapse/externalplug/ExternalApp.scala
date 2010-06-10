@@ -58,7 +58,7 @@ object ExternalApp extends DataAccess {
     } 
 
     if (dirty) {
-      ExternalApp.withStatement("UPDATE synExternalApp SET name = ?, canvasUrl = ?, profileUrl = ? WHERE id = ?") {
+      withStatement("UPDATE synExternalApp SET name = ?, canvasUrl = ?, profileUrl = ? WHERE id = ?") {
         ps =>
           ps.setString(1, name)
           ps.setString(2, canvasUrl)
