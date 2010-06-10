@@ -1,36 +1,57 @@
 package com.syncapse.externalplug
 
-
 import javax.sql.DataSource
-import org.slf4j.LoggerFactory
-import java.sql.{Connection, PreparedStatement, ResultSet}
-import collection.mutable.HashSet
+import java.sql.{ResultSet}
 
-object ExternalApp {
-  val logger = LoggerFactory.getLogger(this.getClass)
+object ExternalApp extends DataAccess {
 
-  var dataSource: DataSource = null
-
-  def loadAll : List[ExternalApp] = {
-    withStatement("SELECT * FROM synExternalApp") { ps =>
-      process(ps, mapper)
+  def loadAll: List[ExternalApp] = {
+    withStatement("SELECT * FROM synExternalApp") {
+      ps =>
+        process(ps, mapper)
     }
   }
 
   def insert(ea: ExternalApp) = {
-    withStatement("INSERT INTO synExternalApp (name, key, canvasUrl, profileUrl) VALUES (?, ?, ?, ?)") { ps =>
-      ps.setString(1, ea.name)
-      ps.setLong(2, ea.key)
-      ps.setString(3, ea.canvasUrl)
-      ps.setString(4, ea.profileUrl)
-      ps.executeUpdate
+    withStatement("INSERT INTO synExternalApp (name, key, canvasUrl, profileUrl) VALUES (?, ?, ?, ?)") {
+      ps =>
+        ps.setString(1, ea.name)
+        ps.setLong(2, ea.key)
+        ps.setString(3, ea.canvasUrl)
+        ps.setString(4, ea.profileUrl)
+        ps.executeUpdate
     }
   }
 
-  def loadById(id: Long) = {
-    withStatement("SELECT * FROM synExternalApp WHERE id = ?") { ps =>
-      ps.setLong(1, id)
-      process(ps, mapper).head
+  def loadById(id: Long): ExternalApp = {
+    withStatement("SELECT * FROM synExternalApp WHERE id = ?") {
+      ps =>
+        ps.setLong(1, id)
+        process(ps, mapper).head
+    }
+  }
+
+  def update(ea: ExternalApp) = {
+    val ea2 = loadById(ea.id.asInstanceOf[Long])
+    val name = if (ea.name != ea2.name) ea.name else ea2.name
+    val canvasUrl = if (ea.canvasUrl != ea2.canvasUrl) ea.canvasUrl else ea2.canvasUrl
+    val profileUrl = if (ea.profileUrl != ea2.profileUrl) ea.profileUrl else ea2.profileUrl
+
+    ExternalApp.withStatement("UPDATE synExternalApp SET name = ?, canvasUrl = ?, profileUrl = ? WHERE id = ?") {
+      ps =>
+        ps.setString(1, name)
+        ps.setString(2, canvasUrl)
+        ps.setString(3, profileUrl)
+        ps.setInt(4, ea2.id.asInstanceOf[Int])
+        ps.executeUpdate
+    }
+  }
+
+  def delete(id: Long) = {
+    withStatement("DELETE FROM synExternalApp WHERE id = ?") {
+      ps =>
+        ps.setLong(1, id)
+        ps.executeUpdate
     }
   }
 
@@ -40,32 +61,8 @@ object ExternalApp {
       rs.getString("name"),
       rs.getInt("key").asInstanceOf[Int],
       rs.getString("canvasUrl"),
-      rs.getString("profileUrl")
-      )
+      rs.getString("profileUrl"))
   }
-
-  protected def withConnection[T](f: Connection => T): T = {
-    val conn = dataSource.getConnection
-    try {f(conn)} finally conn.close
-  }
-
-  protected def withStatement[T](sql: String)(f: PreparedStatement => T): T = {
-    withConnection {
-      conn =>
-        val ps = conn.prepareStatement(sql)
-        try {f(ps)} finally ps.close
-    }
-  }
-
-  protected def process[T,R](ps: PreparedStatement, f: ResultSet => T): List[R] = {
-    val results = new HashSet[R]
-    val rs = ps.executeQuery
-    while (rs.next()) {
-      results += f(rs).asInstanceOf[R]
-    }
-    results.toList
-  }
-
 
 }
 
@@ -74,16 +71,5 @@ case class ExternalApp(id: Option[Long],
                        key: Long,
                        canvasUrl: String,
                        profileUrl: String) {
-
-
-   def save() = {
-    ExternalApp.withStatement("UPDATE synExternalApp SET name = ?, canvasUrl = ?, profileUrl = ? WHERE id = ?") { ps =>
-      ps.setString(1, this.name)
-      ps.setString(2, this.canvasUrl)
-      ps.setString(3, this.profileUrl)
-      ps.setInt(4, this.id.asInstanceOf[Int])
-      ps.executeUpdate
-    }
-  }
 }
 

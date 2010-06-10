@@ -6,24 +6,26 @@ import reflect.BeanProperty
 import collection.JavaConversions
 
 trait BaseAction {
-  protected val success = "success"
+  protected val SUCCESS = "success"
+  protected val INPUT = "input"
 }
 
 class ExternalAppsAction extends JiveActionSupport with BaseAction {
+  
   @BeanProperty
   var apps: JList[ExternalApp] = null
 
   @BeanProperty
   var id: Int = -1
 
-
   override def execute = {
     apps = JavaConversions.asList(ExternalApp.loadAll)
-    success
+    SUCCESS
   }
 
   def delete = {
-    success
+    ExternalApp.delete(id)
+    SUCCESS
   }
 
 }
@@ -34,8 +36,13 @@ class ExternalAppEditAction extends JiveActionSupport with BaseAction {
 
   var id: Int = -1
 
-  override def execute = {
+
+  override def input = {
     externalApp = ExternalApp.loadById(id)
-    success
+    INPUT    
+  }
+
+  override def execute = {
+    SUCCESS
   }
 }
