@@ -1,27 +1,25 @@
-package com.syncapse.scalaplug
+package com.syncapse.externalplug
 
 import com.jivesoftware.base.plugin.Plugin
 import reflect.BeanProperty
 import org.slf4j.LoggerFactory
 import com.jivesoftware.base.UserManager
 import org.springframework.beans.factory.annotation.Required
+import javax.sql.DataSource
 
-class ScalaPlugin extends Object with Plugin[ScalaPlugin] {
-
+class ExternalPlugin extends Object with Plugin[ExternalPlugin] {
   var log = LoggerFactory.getLogger(getClass)
 
   @Required
   @BeanProperty
-  var userManager: UserManager = null
+  var dataSource: DataSource = null
 
   def destroy = {
     log.info("The plugin is now being destroyed")
   }
 
   def init = {
-    log.info("The plugin is now starting up")
-    val admin = userManager.getUser(1)
-    log.info("Here is the admin user "+ admin.getName)
+    ExternalAppManager.dataSource = dataSource
   }
-  
+
 }

@@ -21,7 +21,7 @@
     <url>http://www.jivesoftware.com</url>
     <parent>
         <groupId>com.syncapse</groupId>
-        <artifactId>externalapp</artifactId>
+        <artifactId>externalapp-parent</artifactId>
         <relativePath>..</relativePath>
         <version>1.0-SNAPSHOT</version>
     </parent>
