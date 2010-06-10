@@ -13,6 +13,9 @@ class ExternalAppsAction extends JiveActionSupport with BaseAction {
   @BeanProperty
   var apps: JList[ExternalApp] = null
 
+  @BeanProperty
+  var id: Int = -1
+
 
   override def execute = {
     apps = JavaConversions.asList(ExternalApp.loadAll)

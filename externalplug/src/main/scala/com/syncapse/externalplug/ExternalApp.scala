@@ -27,16 +27,6 @@ object ExternalApp {
     }
   }
 
-  def update(ea: ExternalApp) = {
-    withStatement("UPDATE synExternalApp SET name = ?, canvasUrl = ?, profileUrl = ? WHERE id = ?") { ps =>
-      ps.setString(1, ea.name)
-      ps.setString(2, ea.canvasUrl)
-      ps.setString(3, ea.profileUrl)
-      ps.setInt(4, ea.id.asInstanceOf[Int])
-      ps.executeUpdate
-    }
-  }
-
   def loadById(id: Long) = {
     withStatement("SELECT * FROM synExternalApp WHERE id = ?") { ps =>
       ps.setLong(1, id)
@@ -84,5 +74,16 @@ case class ExternalApp(id: Option[Long],
                        key: Long,
                        canvasUrl: String,
                        profileUrl: String) {
+
+
+   def save() = {
+    ExternalApp.withStatement("UPDATE synExternalApp SET name = ?, canvasUrl = ?, profileUrl = ? WHERE id = ?") { ps =>
+      ps.setString(1, this.name)
+      ps.setString(2, this.canvasUrl)
+      ps.setString(3, this.profileUrl)
+      ps.setInt(4, this.id.asInstanceOf[Int])
+      ps.executeUpdate
+    }
+  }
 }
 
