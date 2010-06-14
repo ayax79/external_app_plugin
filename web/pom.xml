@@ -325,7 +325,7 @@
                                 <home>target/tomcat6x</home>
                                 <properties>
                                     <cargo.jvmargs>-Xdebug -Xnoagent
-                                        -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n -Xms512m -Xmx1024m
+                                        -Xrunjdwp:transport=dt_socket,address=8788,server=y,suspend=n -Xms512m -Xmx1024m
                                         -XX:MaxPermSize=256m -XX:+UseParNewGC -XX:+UseConcMarkSweepGC
                                     </cargo.jvmargs>
                                 </properties>
@@ -333,7 +333,7 @@
                                     <deployable>
                                         <location>target/${customer.name}-${customer.version}-sbs-${sbs.version}.war
                                         </location>
-                                        <pingURL>http://localhost:8080/jive</pingURL>
+                                        <pingURL>http://localhost:8083/jive</pingURL>
                                         <properties>
                                             <context>jive</context>
                                         </properties>
@@ -475,16 +475,18 @@ the time that it takes for cargo to startup Tomcat. -->
                                 <home>target/tomcat6x</home>
                                 <properties>
                                     <cargo.jvmargs>-noverify -javaagent:${rebel.path} -Xdebug -Xnoagent
-                                        -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n -Xms1024m
+                                        -Xrunjdwp:transport=dt_socket,address=8788,server=y,suspend=n -Xms1024m
                                         -Xmx2048m -XX:MaxPermSize=512m -XX:+UseParNewGC -XX:+UseConcMarkSweepGC
                                     </cargo.jvmargs>
                                     <cargo.logging>low</cargo.logging>
+                                    <cargo.servlet.port>8083</cargo.servlet.port>
+                                    <cargo.tomcat.ajp.port>8011</cargo.tomcat.ajp.port>
                                 </properties>
                                 <deployables>
                                     <deployable>
                                         <location>target/${customer.name}-${customer.version}-sbs-${sbs.version}
                                         </location>
-                                        <pingURL>http://localhost:8080/jive</pingURL>
+                                        <pingURL>http://localhost:8083/jive</pingURL>
                                         <properties>
                                             <context>jive</context>
                                         </properties>
