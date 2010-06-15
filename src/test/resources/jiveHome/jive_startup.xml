@@ -32,7 +32,7 @@
 	<database>
 		<defaultProvider>
 			<username>postgres</username>
-			<serverURL>jdbc:postgresql://localhost:5432/avon-1.0-SNAPSHOT</serverURL>
+			<serverURL>jdbc:postgresql://localhost:5432/externalapp-test</serverURL>
 			<maxConnections>25</maxConnections>
 			<connectionTimeout>1.0</connectionTimeout>
 			<driver>org.postgresql.Driver</driver>
