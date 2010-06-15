@@ -11,7 +11,7 @@
         <property name="dataSource">
             <util:property-path path="dataSourceFactory.dataSource"/>
         </property>
-        <property name="sequenceDao" ref="sequenceDao" />
+        <property name="sequenceDao" ref="sequenceDAO" />
     </bean>
 
 </beans>
