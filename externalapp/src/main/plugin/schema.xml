@@ -1,2 +1,13 @@
-<schema name="scalaplug">
+<schema name="externalapp">
+
+    <table name="synExternalApp" description="Stores information for external applications">
+        <column name="appID" type="int" nullable="false" description="the unique ID the represents the type"/>
+        <column name="name" type="varchar" size="255" nullable="false" constraint="unique"
+                description="The code of the type."/>
+        <column name="key" type="varchar" size="255" nullable="false" description="external unique key used by apps to identify themeself" />
+        <column name="canvasUrl" type="varchar" size="255" nullable="false" description="URL for the canvas page of the app" />
+        <column name="profileUrl" type="varchar" size="255" nullable="false" description="URL for the profile page of the app" />
+        <index type="primary" name="jiveObjectType_pk" column="appID"/>
+    </table>
+
 </schema>
