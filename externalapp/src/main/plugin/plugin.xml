@@ -1,6 +1,6 @@
 <plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.jivesoftware.com/schemas/clearspace/1_1/plugin.xsd">
-    <name>scalaplug</name>
+    <name>externalapp</name>
     <description>Supports External Applications</description>
     <author>syncapse</author>
     <version>1.0.0</version>
