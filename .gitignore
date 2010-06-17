@@ -6,3 +6,4 @@ web/overlays
 target
 .project
 .classpath
+.settings
