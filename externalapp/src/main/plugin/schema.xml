@@ -7,7 +7,7 @@
         <column name="key" type="varchar" size="255" nullable="false" description="external unique key used by apps to identify themeself" />
         <column name="canvasUrl" type="varchar" size="255" nullable="false" description="URL for the canvas page of the app" />
         <column name="profileUrl" type="varchar" size="255" nullable="false" description="URL for the profile page of the app" />
-        <index type="primary" name="jiveObjectType_pk" column="appID"/>
+        <index type="primary" name="synExternalApp_pk" column="appID"/>
     </table>
 
 </schema>

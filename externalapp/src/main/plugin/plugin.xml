@@ -5,6 +5,10 @@
     <author>syncapse</author>
     <version>1.0.0</version>
     <minServerVersion>4.0.5</minServerVersion>
+
+    <databaseKey>externalapp</databaseKey>
+    <databaseVersion>1</databaseVersion>
+
     <!-- you will want to change your class name here! -->
 
     <!-- The <components> element contains additions or customizations to
@@ -29,12 +33,12 @@
             seen by visiting users, rather than the profile's owner.
         -->
         <!--<component id="community-tabs">-->
-            <!--<tab id="iframe-tab" cssClass="jive-icon-sml jive-icon-blog">-->
-                <!--<name><![CDATA[TIMS]]></name>-->
-                <!--<description><![CDATA[TIMS]]></description>-->
-                <!--<when><![CDATA[community.getProperties().containsKey('thinkfinity.tims.community')]]></when>-->
-                <!--<url><![CDATA[<@s.url value='${JiveResourceResolver.getJiveObjectURL(community)}'/>?view=iframe]]></url>-->
-            <!--</tab>-->
+        <!--<tab id="iframe-tab" cssClass="jive-icon-sml jive-icon-blog">-->
+        <!--<name><![CDATA[TIMS]]></name>-->
+        <!--<description><![CDATA[TIMS]]></description>-->
+        <!--<when><![CDATA[community.getProperties().containsKey('thinkfinity.tims.community')]]></when>-->
+        <!--<url><![CDATA[<@s.url value='${JiveResourceResolver.getJiveObjectURL(community)}'/>?view=iframe]]></url>-->
+        <!--</tab>-->
         <!--</component>-->
     </components>
 </plugin>
