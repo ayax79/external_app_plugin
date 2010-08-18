@@ -25,20 +25,16 @@
     -->
 
     <components>
-        <!--
-            <component> elements define user interface elements
-            to be integrated. For a description of these, see
-            Integrating Plugin UI. This one adds
-            an Action box link to a user profile; this will be
-            seen by visiting users, rather than the profile's owner.
-        -->
-        <!--<component id="community-tabs">-->
-        <!--<tab id="iframe-tab" cssClass="jive-icon-sml jive-icon-blog">-->
-        <!--<name><![CDATA[TIMS]]></name>-->
-        <!--<description><![CDATA[TIMS]]></description>-->
-        <!--<when><![CDATA[community.getProperties().containsKey('thinkfinity.tims.community')]]></when>-->
-        <!--<url><![CDATA[<@s.url value='${JiveResourceResolver.getJiveObjectURL(community)}'/>?view=iframe]]></url>-->
-        <!--</tab>-->
-        <!--</component>-->
+        <component id="admin-console">
+            <tab id="externalapp" name="admin.menu.externalapp" url="facebook-actions-admin!input.jspa"
+                    description="admin.section.externalapp.applist.desc" role="Manage System">
+                <section id="section.externalapp" name="admin.section.externalapp.list" url="facebook-actions-admin!input.jspa"
+                        description="admin.section.externalapp.applist.desc">
+                    <item id="externalapp-applist" name="admin.section.externalapp.list" url="facebook-actions-admin!input.jspa"
+                            description="admin.item.externalapp.applist.desc"/>
+                </section>
+            </tab>
+        </component>
     </components>
+
 </plugin>
