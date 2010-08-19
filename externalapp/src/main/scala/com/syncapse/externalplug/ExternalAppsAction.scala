@@ -4,22 +4,25 @@ import com.jivesoftware.community.action.JiveActionSupport
 import java.util.{List => JList}
 import reflect.BeanProperty
 import collection.JavaConversions
+import org.slf4j.LoggerFactory
 
 trait BaseAction {
   protected val SUCCESS = "success"
   protected val INPUT = "input"
+  protected lazy val logger = LoggerFactory.getLogger(getClass.getName)
 }
 
 class ExternalAppsAction extends JiveActionSupport with BaseAction {
   
   @BeanProperty
-  var apps: JList[ExternalApp] = null
+  var externalApps: JList[ExternalApp] = null
 
   @BeanProperty
   var id: Int = -1
 
   override def execute = {
-    apps = JavaConversions.asList(ExternalApp.loadAll)
+    externalApps = JavaConversions.asList(ExternalApp.loadAll)
+    logger.info("apps size "+externalApps)
     SUCCESS
   }
 
